@@ -3,9 +3,11 @@
 import Link from "next/link"
 import { BookOpen, Heart } from "lucide-react"
 import { useEffect, useState } from "react"
+import { useTranslation } from "./language-provider"
 
 export function Footer() {
   const [commitHash, setCommitHash] = useState<string>("")
+  const t = useTranslation();
 
   useEffect(() => {
     // In a real app, this would come from environment variables or build process
@@ -23,10 +25,10 @@ export function Footer() {
         <div className="mt-8 md:order-1 md:mt-0">
           <div className="flex flex-col items-center md:items-start space-y-2">
             <p className="text-center text-sm text-white md:text-left">
-              &copy; 2024 EduMind - منصة إنشاء الاختبارات الذكية
+              {t("copyright")}
             </p>
             <p className="text-center text-sm text-gray-400 md:text-left flex items-center gap-1">
-              مصنوع بـ <Heart className="h-3 w-3 text-red-500" /> للمعلمين والمدرسين
+              {t("madeWith")} <Heart className="h-3 w-3 text-red-500" /> {t("forTeachers")}
             </p>
             {commitHash && (
               <span className="inline-flex items-center rounded-full bg-gray-700 px-2 py-1 text-xs font-medium text-gray-300">

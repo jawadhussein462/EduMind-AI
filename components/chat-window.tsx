@@ -39,6 +39,7 @@ import hljs from "highlight.js/lib/common"
 import "katex/dist/katex.min.css"
 
 import { cn } from "@/lib/utils"
+import { useTranslation } from "./language-provider"
 
 /* ----------------------------------------------------------------
    Types
@@ -114,6 +115,7 @@ function CodeBlock({ children, className = "" }: { children: React.ReactNode; cl
    ChatWindow Component
 -----------------------------------------------------------------*/
 export function ChatWindow() {
+  const t = useTranslation();
   const [input, setInput] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -195,7 +197,7 @@ export function ChatWindow() {
           {
             id: Date.now().toString() + Math.random(),
             role: "assistant",
-            content: "🚨 حدث خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقًا.",
+            content: t("serverError"),
             timestamp: new Date(),
           },
         ])
@@ -263,7 +265,7 @@ export function ChatWindow() {
         {
           id: Date.now().toString() + Math.random(),
           role: "assistant",
-          content: "🚨 حدث خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقًا.",
+          content: t("serverError"),
           timestamp: new Date(),
         },
       ])
@@ -296,8 +298,8 @@ export function ChatWindow() {
                  <div className="flex items-center gap-3">
                    <img src="/placeholder-logo.svg" alt="EduMind Logo" className="h-9 w-9 rounded bg-white shadow" />
                    <div>
-                     <h2 className="font-semibold text-gray-900 dark:text-gray-100 leading-tight">إنشاء الاختبارات الذكي</h2>
-                     <p className="text-sm text-gray-600 dark:text-gray-300 leading-tight">أنشئ اختباراً مخصصاً لأي مادة أو دورة تدريبية</p>
+                     <h2 className="font-semibold text-gray-900 dark:text-gray-100 leading-tight">{t("smartExamCreation")}</h2>
+                     <p className="text-sm text-gray-600 dark:text-gray-300 leading-tight">{t("createCustomExam")}</p>
                    </div>
                  </div>
                </div>
@@ -306,7 +308,7 @@ export function ChatWindow() {
                <div className="border-b border-white/30 dark:border-slate-700 px-6 py-2 text-sm flex items-center justify-between bg-white/40 dark:bg-slate-800/40 backdrop-blur">
                  <div className="flex items-center space-x-2 rtl:space-x-reverse">
                    <span className={cn("w-2 h-2 rounded-full", isConnected ? "bg-emerald-500" : "bg-red-500 animate-pulse")}></span>
-                   <span className="text-gray-700 dark:text-gray-300">{isConnected ? "متصل بـ EduMind AI · جاهز" : "غير متصل"}</span>
+                   <span className="text-gray-700 dark:text-gray-300">{isConnected ? t("connected") : t("notConnected")}</span>
                  </div>
                </div>
    
@@ -319,7 +321,7 @@ export function ChatWindow() {
                        ref={textareaRef}
                        value={input}
                        onChange={handleInputChange}
-                       placeholder={"أدخل وصف الاختبار الذي تريد إنشاءه... (مثال: اختبار في الرياضيات للصف العاشر)"}
+                       placeholder={t("inputPlaceholder")}
                        className="flex-1 min-h-[48px] max-h-[160px] resize-none px-4 py-3 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-amber-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-amber-400 text-right leading-relaxed"
                        disabled={isLoading}
                        style={{ direction: "rtl" }}
@@ -330,7 +332,7 @@ export function ChatWindow() {
                          size="icon"
                          variant="ghost"
                          onClick={() => { setInput(""); }}
-                         title="مسح الإدخال"
+                         title={t("clearInput")}
                          className="shrink-0"
                          disabled={!input}
                        >
@@ -341,7 +343,7 @@ export function ChatWindow() {
                          size="icon"
                          variant="ghost"
                          onClick={() => { setMessages([]); setInput(""); }}
-                         title="إعادة تعيين المحادثة"
+                         title={t("resetChat")}
                          className="shrink-0"
                          disabled={messages.length === 0}
                        >
@@ -360,11 +362,11 @@ export function ChatWindow() {
                          <span className="animate-spin flex items-center">
                            <Loader2 className="h-4 w-4" aria-label="Loading" />
                          </span>
-                         {"جاري الإنشاء"}<AnimatedDots />
+                         {t("creating")}<AnimatedDots />
                        </span>
                      ) : (
                        <>
-                         <Send className="w-4 h-4 rtl:ml-2 ltr:mr-2" />{"إنشاء الاختبار"}
+                         <Send className="w-4 h-4 rtl:ml-2 ltr:mr-2" />{t("createExamBtn")}
                        </>
                      )}
                    </Button>

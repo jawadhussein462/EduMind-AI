@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Search, Plus, BookOpen, Calculator, TestTube, Globe, History, Code, X, Star } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useTranslation } from "./language-provider";
 
 interface ExamTemplate {
   id: string
@@ -22,55 +23,61 @@ interface ExamTemplate {
 export function ExamSidebar({ onClose }: { onClose: () => void }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [recentExams, setRecentExams] = useState<any[]>([])
+  const t = useTranslation();
+
+  const safeT = (key: string) => {
+    const value = t(key);
+    return typeof value === 'string' ? value : '';
+  };
 
   const examTemplates: ExamTemplate[] = [
     {
       id: "math",
-      title: "الرياضيات",
-      subject: "Mathematics",
-      grade: "جميع المراحل",
-      description: "اختبارات في الجبر، الهندسة، التفاضل والتكامل",
-      questionTypes: ["اختيار من متعدد", "حسابات", "براهين"],
+      title: safeT("sidebarMath"),
+      subject: safeT("sidebarMath"),
+      grade: safeT("sidebarAllGrades"),
+      description: safeT("sidebarMathDesc"),
+      questionTypes: [safeT("sidebarMCQ"), safeT("sidebarCalculations"), safeT("sidebarProofs")],
       icon: Calculator,
       color: "bg-blue-500"
     },
     {
       id: "science",
-      title: "العلوم",
-      subject: "Science",
-      grade: "جميع المراحل",
-      description: "اختبارات في الفيزياء، الكيمياء، الأحياء",
-      questionTypes: ["اختيار من متعدد", "تجارب", "تحليل"],
+      title: safeT("sidebarScience"),
+      subject: safeT("sidebarScience"),
+      grade: safeT("sidebarAllGrades"),
+      description: safeT("sidebarScienceDesc"),
+      questionTypes: [safeT("sidebarMCQ"), safeT("sidebarExperiments"), safeT("sidebarAnalysis")],
       icon: TestTube,
       color: "bg-green-500"
     },
     {
       id: "languages",
-      title: "اللغات",
-      subject: "Languages",
-      grade: "جميع المراحل",
-      description: "اختبارات في العربية، الإنجليزية، الفرنسية",
-      questionTypes: ["اختيار من متعدد", "قواعد", "قراءة"],
+      title: safeT("sidebarLanguages"),
+      subject: safeT("sidebarLanguages"),
+      grade: safeT("sidebarAllGrades"),
+      description: safeT("sidebarLanguagesDesc"),
+      questionTypes: [safeT("sidebarMCQ"), safeT("sidebarGrammar"), safeT("sidebarReading")],
       icon: Globe,
       color: "bg-purple-500"
     },
     {
       id: "history",
-      title: "التاريخ والجغرافيا",
-      subject: "History & Geography",
-      grade: "جميع المراحل",
-      description: "اختبارات في التاريخ، الجغرافيا، التربية الوطنية",
-      questionTypes: ["اختيار من متعدد", "مقالي", "تحليل"],
+      title: safeT("sidebarHistory"),
+      subject: safeT("sidebarHistory"),
+      grade: safeT("sidebarAllGrades"),
+      description: safeT("sidebarHistoryDesc"),
+      questionTypes: [safeT("sidebarMCQ"), safeT("sidebarEssay"), safeT("sidebarAnalysis")],
       icon: History,
       color: "bg-orange-500"
     },
     {
       id: "programming",
-      title: "البرمجة",
-      subject: "Programming",
-      grade: "الثانوية والجامعة",
-      description: "اختبارات في البرمجة، الخوارزميات، قواعد البيانات",
-      questionTypes: ["اختيار من متعدد", "برمجة", "تحليل"],
+      title: safeT("sidebarProgramming"),
+      subject: safeT("sidebarProgramming"),
+      grade: safeT("sidebarSecondaryUniversity"),
+      description: safeT("sidebarProgrammingDesc"),
+      questionTypes: [safeT("sidebarMCQ"), safeT("sidebarCoding"), safeT("sidebarAnalysis")],
       icon: Code,
       color: "bg-indigo-500"
     }
@@ -114,7 +121,7 @@ export function ExamSidebar({ onClose }: { onClose: () => void }) {
       {/* Header */}
       <div className="p-4 border-b bg-white">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-gray-900">إنشاء الاختبارات</h2>
+          <h2 className="font-semibold text-gray-900">{safeT("sidebarCreateExam")}</h2>
           <Button variant="ghost" size="sm" onClick={onClose} className="lg:hidden">
             <X className="h-4 w-4" />
           </Button>
@@ -124,7 +131,7 @@ export function ExamSidebar({ onClose }: { onClose: () => void }) {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="ابحث عن مادة..."
+            placeholder={t("sidebarSearchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -134,16 +141,16 @@ export function ExamSidebar({ onClose }: { onClose: () => void }) {
 
       {/* Quick Actions */}
       <div className="p-4 border-b bg-white">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">إنشاء سريع</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">{safeT("sidebarQuickCreate")}</h3>
         <Button className="w-full bg-orange-500 hover:bg-orange-600">
           <Plus className="h-4 w-4 mr-2" />
-          اختبار مخصص جديد
+          {safeT("sidebarNewCustomExam")}
         </Button>
       </div>
 
       {/* Exam Templates */}
       <div className="flex-1 overflow-y-auto p-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-3">قوالب الاختبارات</h3>
+        <h3 className="text-sm font-medium text-gray-900 mb-3">{safeT("sidebarExamTemplates")}</h3>
         <div className="space-y-3">
           <AnimatePresence>
             {filteredTemplates.map((template) => (
@@ -176,7 +183,7 @@ export function ExamSidebar({ onClose }: { onClose: () => void }) {
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>{template.grade}</span>
                         <Badge variant="secondary" className="text-xs bg-gray-100">
-                          {template.questionTypes.length} أنواع
+                          {template.questionTypes.length} {safeT("sidebarTypes")}
                         </Badge>
                       </div>
                       <div className="flex flex-wrap gap-1">
@@ -202,14 +209,14 @@ export function ExamSidebar({ onClose }: { onClose: () => void }) {
         {/* Recent Exams */}
         {recentExams.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">الاختبارات الحديثة</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">{safeT("sidebarRecentExams")}</h3>
             <div className="space-y-2">
               {recentExams.map((exam) => (
                 <div key={exam.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
                   <BookOpen className="h-4 w-4 text-gray-400" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{exam.title}</p>
-                    <p className="text-xs text-gray-500">{exam.subject} • {exam.questionCount} سؤال</p>
+                    <p className="text-xs text-gray-500">{exam.subject} • {exam.questionCount} {safeT("sidebarRecentExamQuestions")}</p>
                   </div>
                   <Star className="h-4 w-4 text-gray-300" />
                 </div>
@@ -221,7 +228,7 @@ export function ExamSidebar({ onClose }: { onClose: () => void }) {
         {filteredTemplates.length === 0 && (
           <div className="text-center py-8">
             <BookOpen className="h-8 w-8 mx-auto text-gray-300 mb-2" />
-            <p className="text-sm text-gray-500">لم يتم العثور على قوالب</p>
+            <p className="text-sm text-gray-500">{safeT("sidebarNoTemplates")}</p>
           </div>
         )}
       </div>

@@ -7,6 +7,8 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/components/auth-provider"
+import { LanguageProvider } from "@/components/language-provider"
+import { LanguageSwitcher } from "@/components/language-switcher"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,12 +37,14 @@ export default function RootLayout({
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <ThemeProvider>
           <AuthProvider>
-            <div className="min-h-screen flex flex-col">
-              <Navigation />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <Toaster />
+            <LanguageProvider>
+              <div className="min-h-screen flex flex-col">
+                <Navigation />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <Toaster />
+            </LanguageProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

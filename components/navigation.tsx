@@ -7,18 +7,21 @@ import { Button } from "@/components/ui/button"
 import { Menu, X, BookOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSession, signIn, signOut } from "next-auth/react"
-
-const navigation = [
-  { name: "الرئيسية", href: "/" },
-  { name: "إنشاء الاختبارات", href: "/chatbot" },
-  { name: "اختباراتي", href: "/my-exams" },
-]
+import { useTranslation } from "./language-provider"
+import { LanguageSwitcher } from "./language-switcher"
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const { data: session, status } = useSession()
   const router = useRouter()
+  const t = useTranslation();
+
+  const navigation = [
+    { name: t("home"), href: "/" },
+    { name: t("createExam"), href: "/chatbot" },
+    { name: t("myExams"), href: "/my-exams" },
+  ];
 
   const handleSignOut = async () => {
     await signOut({ redirect: false })
@@ -56,18 +59,19 @@ export function Navigation() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:space-x-4">
+          <LanguageSwitcher />
           {status === "loading" ? (
             <div className="h-9 w-20 animate-pulse bg-accent rounded-md" />
           ) : session ? (
             <div className="flex items-center space-x-2">
               <span className="text-sm text-white/80">{session.user?.email}</span>
               <Button variant="outline" size="sm" onClick={handleSignOut} className="border-white text-white hover:bg-accent/60">
-                تسجيل الخروج
+                {t("signOut")}
               </Button>
             </div>
           ) : (
             <Button size="sm" onClick={() => signIn()} className="bg-white text-primary hover:bg-accent/60">
-              تسجيل الدخول
+              {t("signIn")}
             </Button>
           )}
         </div>

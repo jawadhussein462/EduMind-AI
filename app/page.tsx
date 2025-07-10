@@ -6,32 +6,29 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { ArrowRight, MessageSquare, Database, Download, Check, Star, BookOpen, GraduationCap, FileText } from "lucide-react"
 import { motion } from "framer-motion"
-
-const features = [
-  {
-    icon: MessageSquare,
-    title: "إنشاء ذكي للاختبارات",
-    description: "أنشئ اختبارات لأي مادة عبر وصف احتياجاتك باللغة العربية أو الإنجليزية، ودع الذكاء الاصطناعي يتولى الباقي.",
-  },
-  {
-    icon: Database,
-    title: "جميع المواد والدورات",
-    description: "يدعم إنشاء اختبارات لجميع المواد الدراسية والدورات التدريبية مع تخصيص مستوى الصعوبة.",
-  },
-  {
-    icon: Download,
-    title: "تصدير فوري",
-    description: "حمّل اختباراتك بصيغ PDF أو DOCX أو JSON بضغطة زر واحدة.",
-  },
-]
-
-const subjects = [
-  "الرياضيات", "العلوم", "اللغة العربية", "اللغة الإنجليزية", 
-  "التاريخ", "الجغرافيا", "الفيزياء", "الكيمياء", "الأحياء",
-  "البرمجة", "الاقتصاد", "الفلسفة", "علم النفس", "الطب"
-]
+import { useTranslation } from "@/components/language-provider";
 
 export default function HomePage() {
+  const t = useTranslation();
+  const features = [
+    {
+      icon: MessageSquare,
+      title: t("homepageFeature1Title"),
+      description: t("homepageFeature1Desc"),
+    },
+    {
+      icon: Database,
+      title: t("homepageFeature2Title"),
+      description: t("homepageFeature2Desc"),
+    },
+    {
+      icon: Download,
+      title: t("homepageFeature3Title"),
+      description: t("homepageFeature3Desc"),
+    },
+  ];
+  const subjects = t("homepageSubjects");
+  const subjectList = Array.isArray(subjects) ? subjects : [];
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -44,10 +41,10 @@ export default function HomePage() {
             className="mx-auto max-w-2xl text-center"
           >
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-brand">
-              أنشئ اختباراتك المخصصة <span className="text-primary">لأي مادة</span>
+              {t("homepageHeroTitle")} {t("homepageHeroTitleSubject") ? <span className="text-primary">{t("homepageHeroTitleSubject")}</span> : null}
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              منصة الذكاء الاصطناعي لإنشاء اختبارات لجميع المواد والدورات التدريبية بسهولة وسرعة.
+              {t("homepageHeroSubtitle")}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button
@@ -56,7 +53,7 @@ export default function HomePage() {
                 className="bg-gradient-to-l from-orange-400 via-orange-500 to-orange-600 text-white shadow-xl hover:scale-105 hover:shadow-orange-300/60 focus:ring-4 focus:ring-orange-200 transition-transform duration-200 border-0 outline-none font-extrabold px-8 py-4 rounded-full animate-pulse-slow"
               >
                 <Link href="/chatbot">
-                  ابدأ بإنشاء الاختبارات
+                  {t("homepageHeroButton")}
                   <ArrowRight className="mr-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -76,10 +73,10 @@ export default function HomePage() {
             className="mx-auto max-w-2xl text-center"
           >
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-brand">
-              كل ما تحتاجه لإنشاء اختبارات مثالية
+              {t("homepageFeaturesTitle")}
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              سهّل عملية إعداد الاختبارات مع أدوات الذكاء الاصطناعي المصممة للمعلمين والمدرسين.
+              {t("homepageFeaturesSubtitle")}
             </p>
           </motion.div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
@@ -117,15 +114,15 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="mx-auto max-w-2xl text-center"
           >
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-brand">يدعم جميع المواد والدورات</h2>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-brand">{t("homepageSubjectsTitle")}</h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              أنشئ اختبارات لأي مادة أو دورة تدريبية تريدها
+              {t("homepageSubjectsSubtitle")}
             </p>
           </motion.div>
           <div className="mt-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {subjects.map((subject, index) => (
+            {subjectList.map((subject, index) => (
               <motion.div
-                key={subject}
+                key={typeof subject === 'string' ? subject + index : String(index)}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -133,7 +130,7 @@ export default function HomePage() {
                 className="bg-white rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow"
               >
                 <BookOpen className="h-6 w-6 mx-auto mb-2 text-primary" />
-                <span className="text-sm font-medium text-gray-700">{subject}</span>
+                <span className="text-sm font-medium text-gray-700">{typeof subject === 'string' ? subject : ''}</span>
               </motion.div>
             ))}
           </div>
@@ -150,9 +147,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="mx-auto max-w-2xl text-center"
           >
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-brand">ابدأ الآن</h2>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-brand">{t("homepageCTATitle")}</h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              انضم إلى آلاف المعلمين الذين يستخدمون EduMind لإنشاء اختباراتهم
+              {t("homepageCTASubtitle")}
             </p>
             <div className="mt-10">
               <Button
@@ -161,7 +158,7 @@ export default function HomePage() {
                 className="bg-gradient-to-l from-orange-400 via-orange-500 to-orange-600 text-white shadow-xl hover:scale-105 hover:shadow-orange-300/60 focus:ring-4 focus:ring-orange-200 transition-transform duration-200 border-0 outline-none font-extrabold px-8 py-4 rounded-full"
               >
                 <Link href="/chatbot">
-                  ابدأ بإنشاء الاختبارات
+                  {t("homepageCTABtn")}
                   <ArrowRight className="mr-2 h-4 w-4" />
                 </Link>
               </Button>

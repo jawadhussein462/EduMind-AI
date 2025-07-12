@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const CLARIFY_API_URL = "http://135.224.132.111/api/clarify"
+const CLARIFY_API_URL = "http://48.211.247.204/api/clarify"
 
 export async function POST(req: NextRequest) {
   try {

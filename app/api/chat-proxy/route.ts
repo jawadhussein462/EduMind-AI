@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const API_BASE_URL = "http://135.224.132.111"
+const API_BASE_URL = "http://48.211.247.204"
 
 export async function POST(req: NextRequest) {
   try {

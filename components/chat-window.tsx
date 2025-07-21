@@ -111,6 +111,10 @@ function CodeBlock({ children, className = "" }: { children: React.ReactNode; cl
      return <span>{'.'.repeat(dotCount)}</span>;
    }
 
+function toStr(val: string | string[]): string {
+  return Array.isArray(val) ? val.join("\n") : val;
+}
+
 /* ----------------------------------------------------------------
    ChatWindow Component
 -----------------------------------------------------------------*/
@@ -187,7 +191,7 @@ export function ChatWindow() {
           {
             id: Date.now().toString() + Math.random(),
             role: "assistant",
-            content: data.response ?? "(empty)",
+            content: toStr(data.response ?? "(empty)"),
             timestamp: new Date(),
           },
         ])
@@ -197,7 +201,7 @@ export function ChatWindow() {
           {
             id: Date.now().toString() + Math.random(),
             role: "assistant",
-            content: t("serverError"),
+            content: toStr(t("serverError")),
             timestamp: new Date(),
           },
         ])
@@ -233,11 +237,11 @@ export function ChatWindow() {
           {
             id: Date.now().toString() + Math.random(),
             role: "assistant",
-            content: clarifyData.clarification,
+            content: toStr(clarifyData.clarification),
             timestamp: new Date(),
           },
         ])
-        setPendingClarification(clarifyData.clarification)
+        setPendingClarification(toStr(clarifyData.clarification))
         setInitialMessage(trimmed)
         setIsLoading(false)
         return
@@ -255,7 +259,7 @@ export function ChatWindow() {
         {
           id: Date.now().toString() + Math.random(),
           role: "assistant",
-          content: data.response ?? "(empty)",
+          content: toStr(data.response ?? "(empty)"),
           timestamp: new Date(),
         },
       ])
@@ -265,7 +269,7 @@ export function ChatWindow() {
         {
           id: Date.now().toString() + Math.random(),
           role: "assistant",
-          content: t("serverError"),
+          content: toStr(t("serverError")),
           timestamp: new Date(),
         },
       ])
@@ -314,64 +318,6 @@ export function ChatWindow() {
    
                {/* Body */}
                <div className="px-6 py-6 flex flex-col gap-6">
-                 {/* Input form + reset buttons */}
-                 <form onSubmit={handleSubmit} className="space-y-3">
-                   <div className="flex gap-2 items-end">
-                     <Textarea
-                       ref={textareaRef}
-                       value={input}
-                       onChange={handleInputChange}
-                       placeholder={t("inputPlaceholder")}
-                       className="flex-1 min-h-[48px] max-h-[160px] resize-none px-4 py-3 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-amber-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-amber-400 text-right leading-relaxed"
-                       disabled={isLoading}
-                       style={{ direction: "rtl" }}
-                     />
-                     <div className="flex gap-2">
-                       <Button
-                         type="button"
-                         size="icon"
-                         variant="ghost"
-                         onClick={() => { setInput(""); }}
-                         title={t("clearInput")}
-                         className="shrink-0"
-                         disabled={!input}
-                       >
-                         <X className="w-5 h-5 opacity-70" />
-                       </Button>
-                       <Button
-                         type="button"
-                         size="icon"
-                         variant="ghost"
-                         onClick={() => { setMessages([]); setInput(""); }}
-                         title={t("resetChat")}
-                         className="shrink-0"
-                         disabled={messages.length === 0}
-                       >
-                         <RotateCcw className="w-5 h-5 opacity-70" />
-                       </Button>
-                  </div>
-                </div>
-                   <Button
-                     type="submit"
-                     size="lg"
-                     className="w-full sm:w-auto bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                     disabled={!input.trim() || isLoading}
-                   >
-                     {isLoading ? (
-                       <span className="flex items-center justify-center gap-2">
-                         <span className="animate-spin flex items-center">
-                           <Loader2 className="h-4 w-4" aria-label="Loading" />
-                         </span>
-                         {t("creating")}<AnimatedDots />
-                       </span>
-                     ) : (
-                       <>
-                         <Send className="w-4 h-4 rtl:ml-2 ltr:mr-2" />{t("createExamBtn")}
-                       </>
-                     )}
-                   </Button>
-                 </form>
-   
                  {/* Result / conversation */}
                  <div className="flex-1 min-h-[120px]" ref={scrollRef} style={{ height: '400px', maxHeight: '500px', overflowY: 'auto' }}>
                    <AnimatePresence mode="wait">
@@ -436,7 +382,7 @@ export function ChatWindow() {
                                  li: ({ node, ...props }) => <li className="m-0 p-0 leading-[1] list-none" {...props} />, 
                                }}
                              >
-                               {msg.content}
+                               {toStr(msg.content)}
                              </ReactMarkdown>
                            </div>
                          </div>
@@ -444,6 +390,64 @@ export function ChatWindow() {
                      ))}
                    </AnimatePresence>
                  </div>
+
+                 {/* Input form + reset buttons */}
+                 <form onSubmit={handleSubmit} className="space-y-3">
+                   <div className="flex gap-2 items-end">
+                     <Textarea
+                       ref={textareaRef}
+                       value={input}
+                       onChange={handleInputChange}
+                       placeholder={t("inputPlaceholder")}
+                       className="flex-1 min-h-[48px] max-h-[160px] resize-none px-4 py-3 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-amber-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-amber-400 text-right leading-relaxed"
+                       disabled={isLoading}
+                       style={{ direction: "rtl" }}
+                     />
+                     <div className="flex gap-2">
+                       <Button
+                         type="button"
+                         size="icon"
+                         variant="ghost"
+                         onClick={() => { setInput(""); }}
+                         title={t("clearInput")}
+                         className="shrink-0"
+                         disabled={!input}
+                       >
+                         <X className="w-5 h-5 opacity-70" />
+                       </Button>
+                       <Button
+                         type="button"
+                         size="icon"
+                         variant="ghost"
+                         onClick={() => { setMessages([]); setInput(""); }}
+                         title={t("resetChat")}
+                         className="shrink-0"
+                         disabled={messages.length === 0}
+                       >
+                         <RotateCcw className="w-5 h-5 opacity-70" />
+                       </Button>
+                  </div>
+                </div>
+                   <Button
+                     type="submit"
+                     size="lg"
+                     className="w-full sm:w-auto bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                     disabled={!input.trim() || isLoading}
+                   >
+                     {isLoading ? (
+                       <span className="flex items-center justify-center gap-2">
+                         <span className="animate-spin flex items-center">
+                           <Loader2 className="h-4 w-4" aria-label="Loading" />
+                         </span>
+                         {t("creating")}<AnimatedDots />
+                       </span>
+                     ) : (
+                       <>
+                         <Send className="w-4 h-4 rtl:ml-2 ltr:mr-2" />{t("createExamBtn")}
+                       </>
+                     )}
+                   </Button>
+                 </form>
                </div>
              </CardContent>
            </Card>

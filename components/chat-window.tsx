@@ -126,6 +126,7 @@ export function ChatWindow() {
   const [isConnected, setIsConnected] = useState(false)
   const [pendingClarification, setPendingClarification] = useState<string | null>(null)
   const [initialMessage, setInitialMessage] = useState<string | null>(null)
+  const [conversationEnded, setConversationEnded] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const API_BASE_URL = "/api/chat-proxy"
@@ -195,6 +196,7 @@ export function ChatWindow() {
             timestamp: new Date(),
           },
         ])
+        setConversationEnded(true)
       } catch (err: any) {
         setMessages((prev) => [
           ...prev,
@@ -205,6 +207,7 @@ export function ChatWindow() {
             timestamp: new Date(),
           },
         ])
+        setConversationEnded(true)
       } finally {
         setIsLoading(false)
         setPendingClarification(null)
@@ -263,6 +266,7 @@ export function ChatWindow() {
           timestamp: new Date(),
         },
       ])
+      setConversationEnded(true)
     } catch (err: any) {
       setMessages((prev) => [
         ...prev,
@@ -273,6 +277,7 @@ export function ChatWindow() {
           timestamp: new Date(),
         },
       ])
+      setConversationEnded(true)
     } finally {
       setIsLoading(false)
     }
@@ -400,7 +405,7 @@ export function ChatWindow() {
                        onChange={handleInputChange}
                        placeholder={t("inputPlaceholder")}
                        className="flex-1 min-h-[48px] max-h-[160px] resize-none px-4 py-3 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-amber-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-amber-400 text-right leading-relaxed"
-                       disabled={isLoading}
+                       disabled={isLoading || conversationEnded}
                        style={{ direction: "rtl" }}
                      />
                      <div className="flex gap-2">
@@ -419,7 +424,7 @@ export function ChatWindow() {
                          type="button"
                          size="icon"
                          variant="ghost"
-                         onClick={() => { setMessages([]); setInput(""); }}
+                         onClick={() => { setMessages([]); setInput(""); setConversationEnded(false); }}
                          title={t("resetChat")}
                          className="shrink-0"
                          disabled={messages.length === 0}
@@ -432,7 +437,7 @@ export function ChatWindow() {
                      type="submit"
                      size="lg"
                      className="w-full sm:w-auto bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                     disabled={!input.trim() || isLoading}
+                     disabled={!input.trim() || isLoading || conversationEnded}
                    >
                      {isLoading ? (
                        <span className="flex items-center justify-center gap-2">

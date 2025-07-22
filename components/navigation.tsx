@@ -19,8 +19,9 @@ export function Navigation() {
 
   const navigation = [
     { name: t("home"), href: "/" },
-    { name: t("createExam"), href: "/chatbot" },
     { name: t("myExams"), href: "/my-exams" },
+    { name: t("askAI"), href: "/ask-ai" },
+    { name: t("createExam"), href: "/chatbot" },
   ];
 
   const handleSignOut = async () => {

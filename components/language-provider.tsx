@@ -110,6 +110,29 @@ const translations = {
     sidebarRecentExamQuestions: "Questions",
     sidebarRecentExamDate: "Date",
     sidebarNoRecentExams: "No recent exams",
+    askAI: "Ask AI",
+    askAITitle: "Ask AI",
+    askAIDescription1: "Get instant answers to any question about your school topics!",
+    askAIDescription2: "Select your grade, enter a topic, and ask your question.",
+    selectGrade: "Select Grade",
+    topicPlaceholder: "Topic (e.g. Algebra, Biology)",
+    questionPlaceholder: "Type your question...",
+    askAIButton: "Ask AI",
+    asking: "Asking...",
+    aiAnswerLabel: "AI Answer:",
+    aiAnswerPrefix: "AI Answer for",
+    grade1: "Grade 1",
+    grade2: "Grade 2",
+    grade3: "Grade 3",
+    grade4: "Grade 4",
+    grade5: "Grade 5",
+    grade6: "Grade 6",
+    grade7: "Grade 7",
+    grade8: "Grade 8",
+    grade9: "Grade 9",
+    grade10: "Grade 10",
+    grade11: "Grade 11",
+    grade12: "Grade 12",
   },
   ar: {
     // Footer
@@ -189,10 +212,39 @@ const translations = {
     sidebarRecentExamQuestions: "عدد الأسئلة",
     sidebarRecentExamDate: "تاريخ",
     sidebarNoRecentExams: "لا توجد اختبارات حديثة",
+    askAI: "اسأل الذكاء الاصطناعي",
+    askAITitle: "اسأل الذكاء الاصطناعي",
+    askAIDescription1: "احصل على إجابات فورية لأي سؤال حول مواضيعك الدراسية!",
+    askAIDescription2: "اختر المرحلة، أدخل الموضوع، واسأل سؤالك.",
+    selectGrade: "اختر المرحلة",
+    topicPlaceholder: "الموضوع (مثال: الجبر، الأحياء)",
+    questionPlaceholder: "اكتب سؤالك...",
+    askAIButton: "اسأل الذكاء الاصطناعي",
+    asking: "يتم الإجابة...",
+    aiAnswerLabel: "إجابة الذكاء الاصطناعي:",
+    aiAnswerPrefix: "إجابة الذكاء الاصطناعي لـ",
+    grade1: "الصف الأول",
+    grade2: "الصف الثاني",
+    grade3: "الصف الثالث",
+    grade4: "الصف الرابع",
+    grade5: "الصف الخامس",
+    grade6: "الصف السادس",
+    grade7: "الصف السابع",
+    grade8: "الصف الثامن",
+    grade9: "الصف التاسع",
+    grade10: "الصف العاشر",
+    grade11: "الصف الحادي عشر",
+    grade12: "الصف الثاني عشر",
   },
 };
 
 export function useTranslation() {
   const { language } = useLanguage();
-  return (key: keyof typeof translations["en"]) => translations[language][key] || key;
+  return (key: keyof typeof translations["en"]) => {
+    const value = translations[language][key];
+    if (Array.isArray(value)) {
+      return value.join(", ");
+    }
+    return value || key;
+  };
 } 
